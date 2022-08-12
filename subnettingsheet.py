@@ -21,10 +21,10 @@ cell_format = workbook.add_format({'align': 'center',
                                    'text_wrap': True})
 
 # The netmask to which we want to go
-smallestmask = 26
+smallestmask = 23
 
 # The original subnet to split
-net = netaddr.IPNetwork('10.102.128.0/17')
+net = netaddr.IPNetwork('10.84.0.0/16')
 
 # How many columns are required
 nbcolumns = smallestmask - net.prefixlen
@@ -47,7 +47,7 @@ for col in range(0,nbcolumns+1):
     header= "/%s - %s hosts \n %s nets %s" % (str(net.prefixlen+col), str(len(firstnet)),
                                               str(len(list(net.subnet(net.prefixlen+col)))), str(firstnet.netmask) )
 
-    worksheet.write_rich_string(headercell, header, header_format)
+    worksheet.write(headercell, header, header_format)
 
     # get the size of one merged cell for this netmask
     sizecell = maxlines/2**col
@@ -62,7 +62,7 @@ for col in range(0,nbcolumns+1):
 
         if col == nbcolumns:
             # last column, do not merge cells
-            worksheet.write_rich_string(bcell, str(snet), cell_format)
+            worksheet.write(bcell, str(snet), cell_format)
         else:
             # We can only write simple types to merged ranges so we write a blank string.
             # We merge from bcell to ecell
@@ -70,7 +70,7 @@ for col in range(0,nbcolumns+1):
 
             # We then overwrite the first merged cell with a rich string. Note that we
             # must also pass the cell format used in the merged cells format at the end.
-            worksheet.write_rich_string(bcell, str(snet), cell_format)
+            worksheet.write(bcell, str(snet), cell_format)
 
 
 workbook.close()
